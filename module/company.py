@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from db_module import init_db, Company, JobPosition, Application, Student
+from db import init_db, Company, JobPosition, Application, Student
 
 app = Flask(__name__)
 db_session = init_db()
