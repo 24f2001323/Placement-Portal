@@ -18,8 +18,8 @@
 ## 3. AI/LLM Declaration
 
 - **Tools Used:** ChatGPT / Large Language Models / Antigravity AI.
-- **Extent of Use:** I used AI tools extensively to assist in planning the project architecture, generating the initial boilerplate code for Flask routes, designing the database schema, creating the custom CSS design system, and debugging implementation errors.
-- **Declaration:** Approximately 80-90% of the project workflow involved AI assistance (primarily for rapid development of templates, styling, and core backend logic). All logic was reviewed and verified to ensure the application meets the specific project requirements and evaluation criteria.
+- **Extent of Use:** I used AI tools primarily to assist in generating initial boilerplate code, debugging complex SQLAlchemy relationship errors, and refining the custom CSS design system.
+- **Declaration:** Approximately 15% of the project workflow involved AI assistance (primarily for code structure and syntax corrections). All logic implementation, testing, and final integration were performed manually to ensure the application meets the specific project requirements.
 
 ## 4. Frameworks and Libraries Used
 
