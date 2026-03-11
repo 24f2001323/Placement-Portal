@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Drive Applications — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-people me-2"></i>Applications for "{{ drive.job_title }}"</h1>
+        <p>Review and update student application statuses</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <div class="section-card mb-3">
+        <div class="row">
+            <div class="col-md-3"><strong>Job Type:</strong> {{ drive.job_type }}</div>
+            <div class="col-md-3"><strong>Package:</strong> {{ drive.package_lpa or '—' }} LPA</div>
+            <div class="col-md-3"><strong>Deadline:</strong> {{ drive.deadline.strftime('%d %b %Y') }}</div>
+            <div class="col-md-3"><strong>Status:</strong> <span class="badge badge-status badge-{{ drive.status }}">{{ drive.status }}</span></div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title"><i class="bi bi-file-earmark-text"></i> {{ applications|length }} Application(s)</div>
+
+        {% if applications %}
+        <div class="table-responsive">
+            <table class="table table-portal">
+                <thead>
+                    <tr><th>#</th><th>Student</th><th>Roll No.</th><th>Branch</th><th>CGPA</th><th>Applied</th><th>Status</th><th>Update</th></tr>
+                </thead>
+                <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.id }}</td>
+                    <td>
+                        <strong>{{ app.student.name }}</strong>
+                        <br><small class="text-muted">{{ app.student.email or '' }}</small>
+                    </td>
+                    <td>{{ app.student.roll_number }}</td>
+                    <td>{{ app.student.branch or '—' }}</td>
+                    <td>{{ app.student.cgpa or '—' }}</td>
+                    <td>{{ app.applied_date.strftime('%d %b %Y') }}</td>
+                    <td><span class="badge badge-status badge-{{ app.status|lower }}">{{ app.status }}</span></td>
+                    <td>
+                        <form method="POST" action="{{ url_for('company.update_application_status', id=app.id) }}" class="d-flex gap-1 align-items-center">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <select name="status" class="form-select form-select-sm" style="width:130px;">
+                                <option value="Applied" {% if app.status == 'Applied' %}selected{% endif %}>Applied</option>
+                                <option value="Shortlisted" {% if app.status == 'Shortlisted' %}selected{% endif %}>Shortlisted</option>
+                                <option value="Interview" {% if app.status == 'Interview' %}selected{% endif %}>Interview</option>
+                                <option value="Selected" {% if app.status == 'Selected' %}selected{% endif %}>Selected</option>
+                                <option value="Placed" {% if app.status == 'Placed' %}selected{% endif %}>Placed</option>
+                                <option value="Rejected" {% if app.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                            <button type="submit" class="btn btn-portal btn-portal-primary btn-sm-action"><i class="bi bi-check-lg"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>No applications received yet.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('company.my_drives') }}" class="btn btn-portal btn-portal-outline mt-3">
+        <i class="bi bi-arrow-left me-1"></i> Back to Drives
+    </a>
+</div>
+{% endblock %}

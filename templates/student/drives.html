@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Placement Drives — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-briefcase me-2"></i>Placement Drives</h1>
+        <p>Browse all approved placement drives and apply</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <!-- Search -->
+    <div class="section-card mb-3">
+        <form method="GET" class="row g-2 align-items-center">
+            <div class="col-md-8">
+                <div class="search-bar">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" name="search" class="form-control" placeholder="Search by job title, company, or location..." value="{{ search }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-portal btn-portal-primary w-100">Search</button>
+            </div>
+            <div class="col-md-2 text-end">
+                <span class="badge bg-primary fs-6 px-3 py-2">{{ drives|length }} Drives</span>
+            </div>
+        </form>
+    </div>
+
+    {% if drives %}
+    {% for d in drives %}
+    <div class="drive-card">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div class="flex-grow-1">
+                <div class="drive-title">{{ d.job_title }}</div>
+                <div class="drive-company">{{ d.company.name }}</div>
+                <div class="drive-meta">
+                    <span><i class="bi bi-briefcase"></i> {{ d.job_type }}</span>
+                    <span><i class="bi bi-geo-alt"></i> {{ d.location or 'Remote' }}</span>
+                    <span><i class="bi bi-calendar"></i> Deadline: {{ d.deadline.strftime('%d %b %Y') }}</span>
+                    <span><i class="bi bi-cash-stack"></i> {{ d.package_lpa or '—' }} LPA</span>
+                    <span><i class="bi bi-mortarboard"></i> Min CGPA: {{ d.min_cgpa }}</span>
+                </div>
+                {% if d.description %}
+                <p class="text-muted small mt-2 mb-1">{{ d.description[:200] }}{% if d.description|length > 200 %}...{% endif %}</p>
+                {% endif %}
+                {% if d.eligibility %}
+                <p class="small mb-0"><strong>Eligibility:</strong> {{ d.eligibility[:150] }}{% if d.eligibility|length > 150 %}...{% endif %}</p>
+                {% endif %}
+            </div>
+            <div class="ms-3 mt-2 mt-md-0 text-end">
+                {% if d.id in applied_drive_ids %}
+                <span class="badge badge-status badge-applied px-3 py-2"><i class="bi bi-check me-1"></i>Applied</span>
+                {% else %}
+                <form method="POST" action="{{ url_for('student.apply_drive', id=d.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-portal btn-portal-primary">
+                        <i class="bi bi-send me-1"></i> Apply Now
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="section-card">
+        <div class="empty-state">
+            <i class="bi bi-briefcase"></i>
+            <p>No approved drives available at the moment. Check back later!</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

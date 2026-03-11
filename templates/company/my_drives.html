@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}My Drives — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="bi bi-briefcase me-2"></i>My Placement Drives</h1>
+                <p>{{ company.name }} — All placement drives</p>
+            </div>
+            <a href="{{ url_for('company.create_drive') }}" class="btn btn-light btn-lg">
+                <i class="bi bi-plus-lg me-1"></i> New Drive
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    {% if drives %}
+    {% for d in drives %}
+    <div class="drive-card">
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div class="flex-grow-1">
+                <div class="drive-title">{{ d.job_title }}</div>
+                <div class="drive-meta">
+                    <span><i class="bi bi-briefcase"></i> {{ d.job_type }}</span>
+                    <span><i class="bi bi-geo-alt"></i> {{ d.location or 'Remote' }}</span>
+                    <span><i class="bi bi-calendar"></i> Deadline: {{ d.deadline.strftime('%d %b %Y') }}</span>
+                    <span><i class="bi bi-cash-stack"></i> {{ d.package_lpa or '—' }} LPA</span>
+                    <span><i class="bi bi-mortarboard"></i> Min CGPA: {{ d.min_cgpa }}</span>
+                    <span><i class="bi bi-people"></i> {{ d.applications|length }} Apps</span>
+                </div>
+                {% if d.description %}
+                <p class="text-muted small mt-2 mb-0">{{ d.description[:150] }}{% if d.description|length > 150 %}...{% endif %}</p>
+                {% endif %}
+            </div>
+            <div class="text-end ms-3">
+                <span class="badge badge-status badge-{{ d.status }} mb-2">{{ d.status }}</span>
+                <div class="d-flex gap-1">
+                    <a href="{{ url_for('company.drive_applications', id=d.id) }}" class="btn btn-portal btn-portal-info btn-sm-action" title="Applications"><i class="bi bi-eye"></i></a>
+                    {% if d.status != 'closed' %}
+                    <a href="{{ url_for('company.edit_drive', id=d.id) }}" class="btn btn-portal btn-portal-primary btn-sm-action" title="Edit"><i class="bi bi-pencil"></i></a>
+                    <form method="POST" action="{{ url_for('company.close_drive', id=d.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-portal btn-portal-warning btn-sm-action" title="Close"><i class="bi bi-lock"></i></button>
+                    </form>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('company.delete_drive', id=d.id) }}" class="d-inline"
+                          onsubmit="return confirm('Delete this drive?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-portal btn-portal-danger btn-sm-action" title="Delete"><i class="bi bi-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="section-card">
+        <div class="empty-state">
+            <i class="bi bi-briefcase"></i>
+            <p>You haven't created any drives yet.</p>
+            <a href="{{ url_for('company.create_drive') }}" class="btn btn-portal btn-portal-primary mt-2">Create Your First Drive</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Company Profile — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-building me-2"></i>Edit Company Profile</h1>
+        <p>Update your company information</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="section-card">
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.company_name.label(class="form-label") }}
+                        {{ form.company_name(class="form-control") }}
+                        {% for error in form.company_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.hr_contact.label(class="form-label") }}
+                            {{ form.hr_contact(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.hr_email.label(class="form-label") }}
+                            {{ form.hr_email(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.website.label(class="form-label") }}
+                            {{ form.website(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.industry.label(class="form-label") }}
+                        {{ form.industry(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="4") }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.address.label(class="form-label") }}
+                        {{ form.address(class="form-control", rows="2") }}
+                    </div>
+
+                    <button type="submit" class="btn btn-portal btn-portal-primary">
+                        <i class="bi bi-check-lg me-1"></i> Update Profile
+                    </button>
+                    <a href="{{ url_for('company.dashboard') }}" class="btn btn-portal btn-portal-outline ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Company Registration — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper" style="padding:2rem;">
+    <div class="auth-card" style="max-width:600px;">
+        <div class="auth-logo">
+            <i class="bi bi-building-add"></i>
+            <h2>Company Registration</h2>
+            <p>Register your company for campus recruitment</p>
+        </div>
+
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-control", placeholder="Choose a username") }}
+                    {% for error in form.username.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control", placeholder="company@email.com") }}
+                    {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control", placeholder="Min 6 characters") }}
+                    {% for error in form.password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.confirm_password.label(class="form-label") }}
+                    {{ form.confirm_password(class="form-control", placeholder="Repeat password") }}
+                    {% for error in form.confirm_password.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+            </div>
+
+            <hr class="my-3">
+            <h6 class="fw-bold mb-3"><i class="bi bi-building me-1"></i> Company Details</h6>
+
+            <div class="mb-3">
+                {{ form.company_name.label(class="form-label") }}
+                {{ form.company_name(class="form-control", placeholder="Your Company Name") }}
+                {% for error in form.company_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.hr_contact.label(class="form-label") }}
+                    {{ form.hr_contact(class="form-control", placeholder="HR person's name") }}
+                    {% for error in form.hr_contact.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.hr_email.label(class="form-label") }}
+                    {{ form.hr_email(class="form-control", placeholder="hr@company.com") }}
+                    {% for error in form.hr_email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.phone.label(class="form-label") }}
+                    {{ form.phone(class="form-control", placeholder="+91 XXXXX XXXXX") }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.website.label(class="form-label") }}
+                    {{ form.website(class="form-control", placeholder="https://company.com") }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.industry.label(class="form-label") }}
+                {{ form.industry(class="form-control", placeholder="e.g. IT, Finance, Manufacturing") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", rows="3", placeholder="Brief description of your company") }}
+            </div>
+
+            <div class="mb-4">
+                {{ form.address.label(class="form-label") }}
+                {{ form.address(class="form-control", rows="2", placeholder="Company address") }}
+            </div>
+
+            <button type="submit" class="btn btn-auth">
+                <i class="bi bi-send me-2"></i>Submit Registration
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small class="text-muted">Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a></small>
+        </div>
+    </div>
+</div>
+{% endblock %}

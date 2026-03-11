@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Edit Drive — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-pencil-square me-2"></i>Edit Placement Drive</h1>
+        <p>{{ drive.job_title }}</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="section-card">
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.job_title.label(class="form-label") }}
+                        {{ form.job_title(class="form-control") }}
+                        {% for error in form.job_title.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="4") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.eligibility.label(class="form-label") }}
+                        {{ form.eligibility(class="form-control", rows="3") }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.min_cgpa.label(class="form-label") }}
+                            {{ form.min_cgpa(class="form-control") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.package_lpa.label(class="form-label") }}
+                            {{ form.package_lpa(class="form-control") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.location.label(class="form-label") }}
+                            {{ form.location(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.job_type.label(class="form-label") }}
+                            {{ form.job_type(class="form-select") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.deadline.label(class="form-label") }}
+                            {{ form.deadline(class="form-control", type="date") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.max_applications.label(class="form-label") }}
+                            {{ form.max_applications(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-portal btn-portal-primary">
+                        <i class="bi bi-check-lg me-1"></i> Save Changes
+                    </button>
+                    <a href="{{ url_for('company.my_drives') }}" class="btn btn-portal btn-portal-outline ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

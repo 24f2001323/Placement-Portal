@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Placement History — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-clock-history me-2"></i>Placement History</h1>
+        <p>Your complete placement journey</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <!-- Selections -->
+    {% if selected %}
+    <div class="section-card mb-4">
+        <div class="section-title"><i class="bi bi-trophy"></i> Offers Received</div>
+        <div class="row g-3">
+            {% for app in selected %}
+            <div class="col-md-6">
+                <div class="drive-card" style="border-left-color: var(--success);">
+                    <div class="drive-title">{{ app.drive.job_title }}</div>
+                    <div class="drive-company">{{ app.drive.company.name }}</div>
+                    <div class="drive-meta">
+                        <span><i class="bi bi-cash-stack"></i> {{ app.drive.package_lpa or '—' }} LPA</span>
+                        <span><i class="bi bi-geo-alt"></i> {{ app.drive.location or 'Remote' }}</span>
+                        <span><i class="bi bi-calendar"></i> {{ app.applied_date.strftime('%d %b %Y') }}</span>
+                    </div>
+                    <span class="badge badge-status badge-selected mt-2"><i class="bi bi-check-circle me-1"></i>Selected</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Full History -->
+    <div class="section-card">
+        <div class="section-title"><i class="bi bi-list-ul"></i> Complete Application History</div>
+
+        {% if all_apps %}
+        <div class="table-responsive">
+            <table class="table table-portal">
+                <thead>
+                    <tr><th>#</th><th>Job Title</th><th>Company</th><th>Package</th><th>Type</th><th>Applied</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                {% for app in all_apps %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><strong>{{ app.drive.job_title }}</strong></td>
+                    <td>{{ app.drive.company.name }}</td>
+                    <td>{{ app.drive.package_lpa or '—' }} LPA</td>
+                    <td>{{ app.drive.job_type }}</td>
+                    <td>{{ app.applied_date.strftime('%d %b %Y') }}</td>
+                    <td><span class="badge badge-status badge-{{ app.status|lower }}">{{ app.status }}</span></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-clock-history"></i>
+            <p>No placement history yet. Start applying to drives!</p>
+            <a href="{{ url_for('student.drives') }}" class="btn btn-portal btn-portal-primary mt-2">Browse Drives</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Manage Drives — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-briefcase me-2"></i>Manage Placement Drives</h1>
+        <p>Approve, reject, and monitor all placement drives</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <div class="section-card">
+        <div class="row g-3 mb-3">
+            <div class="col-md-8">
+                <a href="{{ url_for('admin.drives', status='all') }}" class="btn btn-portal btn-sm {% if status_filter == 'all' %}btn-portal-primary{% else %}btn-portal-outline{% endif %}">All</a>
+                <a href="{{ url_for('admin.drives', status='pending') }}" class="btn btn-portal btn-sm {% if status_filter == 'pending' %}btn-portal-warning{% else %}btn-portal-outline{% endif %}">Pending</a>
+                <a href="{{ url_for('admin.drives', status='approved') }}" class="btn btn-portal btn-sm {% if status_filter == 'approved' %}btn-portal-success{% else %}btn-portal-outline{% endif %}">Approved</a>
+                <a href="{{ url_for('admin.drives', status='closed') }}" class="btn btn-portal btn-sm {% if status_filter == 'closed' %}btn-portal-info{% else %}btn-portal-outline{% endif %}">Closed</a>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <span class="badge bg-primary fs-6 px-3 py-2">{{ drives|length }} Drives</span>
+            </div>
+        </div>
+
+        {% if drives %}
+        <div class="table-responsive">
+            <table class="table table-portal">
+                <thead>
+                    <tr><th>#</th><th>Job Title</th><th>Company</th><th>Package</th><th>Deadline</th><th>Apps</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                {% for d in drives %}
+                <tr>
+                    <td>{{ d.id }}</td>
+                    <td>
+                        <strong>{{ d.job_title }}</strong>
+                        <br><small class="text-muted">{{ d.job_type }} · Min CGPA: {{ d.min_cgpa }}</small>
+                    </td>
+                    <td>{{ d.company.name }}</td>
+                    <td>{{ d.package_lpa or '—' }} LPA</td>
+                    <td>{{ d.deadline.strftime('%d %b %Y') }}</td>
+                    <td><span class="badge bg-primary">{{ d.applications|length }}</span></td>
+                    <td><span class="badge badge-status badge-{{ d.status }}">{{ d.status }}</span></td>
+                    <td class="text-nowrap">
+                        {% if d.status == 'pending' %}
+                        <form method="POST" action="{{ url_for('admin.approve_drive', id=d.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-portal btn-portal-success btn-sm-action" title="Approve"><i class="bi bi-check-lg"></i></button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin.reject_drive', id=d.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-portal btn-portal-danger btn-sm-action" title="Reject"><i class="bi bi-x-lg"></i></button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-briefcase"></i>
+            <p>No placement drives found.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

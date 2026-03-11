@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Manage Companies — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-building me-2"></i>Manage Companies</h1>
+        <p>Approve, reject, or blacklist company registrations</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <div class="section-card">
+        <!-- Search & Filter -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <form method="GET" class="search-bar">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" name="search" class="form-control" placeholder="Search companies by name..." value="{{ search }}">
+                    <input type="hidden" name="status" value="{{ status_filter }}">
+                </form>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="{{ url_for('admin.companies', status='all') }}" class="btn btn-portal btn-sm {% if status_filter == 'all' %}btn-portal-primary{% else %}btn-portal-outline{% endif %}">All</a>
+                <a href="{{ url_for('admin.companies', status='pending') }}" class="btn btn-portal btn-sm {% if status_filter == 'pending' %}btn-portal-warning{% else %}btn-portal-outline{% endif %}">Pending</a>
+                <a href="{{ url_for('admin.companies', status='approved') }}" class="btn btn-portal btn-sm {% if status_filter == 'approved' %}btn-portal-success{% else %}btn-portal-outline{% endif %}">Approved</a>
+                <a href="{{ url_for('admin.companies', status='rejected') }}" class="btn btn-portal btn-sm {% if status_filter == 'rejected' %}btn-portal-danger{% else %}btn-portal-outline{% endif %}">Rejected</a>
+            </div>
+        </div>
+
+        {% if companies %}
+        <div class="table-responsive">
+            <table class="table table-portal">
+                <thead>
+                    <tr>
+                        <th>#</th><th>Company Name</th><th>HR Contact</th><th>Industry</th><th>Status</th><th>Blacklisted</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for c in companies %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td>
+                        <strong>{{ c.name }}</strong>
+                        {% if c.website %}<br><small class="text-muted">{{ c.website }}</small>{% endif %}
+                    </td>
+                    <td>{{ c.hr_contact or '—' }}<br><small class="text-muted">{{ c.hr_email or '' }}</small></td>
+                    <td>{{ c.industry or '—' }}</td>
+                    <td><span class="badge badge-status badge-{{ c.approval_status }}">{{ c.approval_status }}</span></td>
+                    <td>
+                        {% if c.is_blacklisted %}
+                        <span class="badge bg-danger">Yes</span>
+                        {% else %}
+                        <span class="badge bg-secondary">No</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-nowrap">
+                        {% if c.approval_status == 'pending' %}
+                        <form method="POST" action="{{ url_for('admin.approve_company', id=c.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-portal btn-portal-success btn-sm-action" title="Approve"><i class="bi bi-check-lg"></i></button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin.reject_company', id=c.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-portal btn-portal-danger btn-sm-action" title="Reject"><i class="bi bi-x-lg"></i></button>
+                        </form>
+                        {% endif %}
+                        <form method="POST" action="{{ url_for('admin.blacklist_company', id=c.id) }}" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-portal btn-portal-warning btn-sm-action" title="Toggle Blacklist">
+                                <i class="bi bi-slash-circle"></i>
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin.delete_company', id=c.id) }}" class="d-inline"
+                              onsubmit="return confirm('Delete {{ c.name }}? This cannot be undone.');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-portal btn-portal-danger btn-sm-action" title="Delete"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-building"></i>
+            <p>No companies found.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

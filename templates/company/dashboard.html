@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Company Dashboard — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-building me-2"></i>{{ company.name }}</h1>
+        <p>Company Dashboard — Manage your placement drives</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card bg-primary-g">
+                <div class="stat-icon"><i class="bi bi-briefcase-fill"></i></div>
+                <div class="stat-value">{{ drive_stats|length }}</div>
+                <div class="stat-label">Total Drives</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-cool-g">
+                <div class="stat-icon"><i class="bi bi-file-earmark-text-fill"></i></div>
+                <div class="stat-value">{{ total_apps }}</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-green-g">
+                <div class="stat-icon"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="stat-value">{{ company.approval_status|capitalize }}</div>
+                <div class="stat-label">Approval Status</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-warm-g">
+                <div class="stat-icon"><i class="bi bi-globe"></i></div>
+                <div class="stat-value">{{ company.industry or 'N/A' }}</div>
+                <div class="stat-label">Industry</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Details -->
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="section-card">
+                <div class="section-title"><i class="bi bi-info-circle"></i> Company Info</div>
+                <table class="table table-borderless mb-0">
+                    <tr><td class="fw-bold text-muted small">HR Contact</td><td>{{ company.hr_contact or '—' }}</td></tr>
+                    <tr><td class="fw-bold text-muted small">HR Email</td><td>{{ company.hr_email or '—' }}</td></tr>
+                    <tr><td class="fw-bold text-muted small">Phone</td><td>{{ company.phone or '—' }}</td></tr>
+                    <tr><td class="fw-bold text-muted small">Website</td><td>{{ company.website or '—' }}</td></tr>
+                </table>
+                <a href="{{ url_for('company.profile') }}" class="btn btn-portal btn-portal-outline btn-sm mt-2 w-100">
+                    <i class="bi bi-pencil me-1"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="section-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="section-title mb-0"><i class="bi bi-briefcase"></i> My Placement Drives</div>
+                    <a href="{{ url_for('company.create_drive') }}" class="btn btn-portal btn-portal-primary btn-sm">
+                        <i class="bi bi-plus-lg me-1"></i> New Drive
+                    </a>
+                </div>
+
+                {% if drive_stats %}
+                {% for ds in drive_stats %}
+                <div class="drive-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="drive-title">{{ ds.drive.job_title }}</div>
+                            <div class="drive-meta">
+                                <span><i class="bi bi-geo-alt"></i> {{ ds.drive.location or 'Remote' }}</span>
+                                <span><i class="bi bi-calendar"></i> Deadline: {{ ds.drive.deadline.strftime('%d %b %Y') }}</span>
+                                <span><i class="bi bi-people"></i> {{ ds.app_count }} Applications</span>
+                                <span><i class="bi bi-cash-stack"></i> {{ ds.drive.package_lpa or '—' }} LPA</span>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge badge-status badge-{{ ds.drive.status }}">{{ ds.drive.status }}</span>
+                            <div class="mt-2">
+                                <a href="{{ url_for('company.drive_applications', id=ds.drive.id) }}" class="btn btn-portal btn-portal-info btn-sm-action" title="View Apps"><i class="bi bi-eye"></i></a>
+                                <a href="{{ url_for('company.edit_drive', id=ds.drive.id) }}" class="btn btn-portal btn-portal-primary btn-sm-action" title="Edit"><i class="bi bi-pencil"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-briefcase"></i>
+                    <p>No drives created yet. Click "New Drive" to get started.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

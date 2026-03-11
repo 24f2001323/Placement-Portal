@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Login — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i class="bi bi-mortarboard-fill"></i>
+            <h2>placement portal</h2>
+            <p>Campus Placement Portal</p>
+        </div>
+
+
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control", placeholder="Enter your username", autofocus=true) }}
+                {% for error in form.username.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="mb-4">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control", placeholder="Enter your password") }}
+                {% for error in form.password.errors %}
+                <div class="text-danger small mt-1">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn btn-auth mb-3">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </button>
+        </form>
+
+        <hr>
+        <div class="text-center">
+            <p class="text-muted small mb-2">Don't have an account?</p>
+            <a href="{{ url_for('auth.register_student') }}" class="btn btn-portal btn-portal-outline btn-sm me-2">
+                <i class="bi bi-person-plus me-1"></i>Student Register
+            </a>
+            <a href="{{ url_for('auth.register_company') }}" class="btn btn-portal btn-portal-outline btn-sm">
+                <i class="bi bi-building-add me-1"></i>Company Register
+            </a>
+        </div>
+        <div class="text-center mt-3">
+            <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Admin account is pre-configured by the
+                institute</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

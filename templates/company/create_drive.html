@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Create Placement Drive — PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-plus-circle me-2"></i>Create Placement Drive</h1>
+        <p>Post a new job opportunity for students</p>
+    </div>
+</div>
+
+<div class="container content-wrap">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="section-card">
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.job_title.label(class="form-label") }}
+                        {{ form.job_title(class="form-control", placeholder="e.g. Software Engineer, Data Analyst") }}
+                        {% for error in form.job_title.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="4", placeholder="Describe the role, responsibilities, and expectations") }}
+                        {% for error in form.description.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.eligibility.label(class="form-label") }}
+                        {{ form.eligibility(class="form-control", rows="3", placeholder="e.g. B.Tech CS/IT, min 60% in 10th & 12th") }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.min_cgpa.label(class="form-label") }}
+                            {{ form.min_cgpa(class="form-control", placeholder="0.0") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.package_lpa.label(class="form-label") }}
+                            {{ form.package_lpa(class="form-control", placeholder="e.g. 6-8") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.location.label(class="form-label") }}
+                            {{ form.location(class="form-control", placeholder="e.g. Bangalore") }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            {{ form.job_type.label(class="form-label") }}
+                            {{ form.job_type(class="form-select") }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.deadline.label(class="form-label") }}
+                            {{ form.deadline(class="form-control", type="date") }}
+                            {% for error in form.deadline.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            {{ form.max_applications.label(class="form-label") }}
+                            {{ form.max_applications(class="form-control") }}
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-1"></i> Your drive will be reviewed by the admin before going live.
+                    </div>
+
+                    <button type="submit" class="btn btn-portal btn-portal-primary">
+                        <i class="bi bi-send me-1"></i> Submit Drive
+                    </button>
+                    <a href="{{ url_for('company.my_drives') }}" class="btn btn-portal btn-portal-outline ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
